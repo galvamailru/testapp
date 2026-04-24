@@ -47,8 +47,9 @@ function renderCalendar() {
     
     calendarGrid.innerHTML = '';
     
-    // Empty cells for days before first day
-    for (let i = 0; i < (firstDay === 0 ? 6 : firstDay - 1); i++) {
+    // Empty cells for days before first day (Monday start)
+    const startOffset = firstDay === 0 ? 6 : firstDay - 1;
+    for (let i = 0; i < startOffset; i++) {
         const empty = document.createElement('div');
         calendarGrid.appendChild(empty);
     }
