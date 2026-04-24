@@ -7,14 +7,14 @@ class TaskCreate(BaseModel):
     description: Optional[str] = None
     date: date
     time: Optional[time] = None
-    status: Optional[str] = "pending"
+    completed: bool = False
 
 class TaskUpdate(BaseModel):
     title: Optional[str] = None
     description: Optional[str] = None
     date: Optional[date] = None
     time: Optional[time] = None
-    status: Optional[str] = None
+    completed: Optional[bool] = None
 
 class TaskResponse(BaseModel):
     id: int
@@ -22,7 +22,7 @@ class TaskResponse(BaseModel):
     description: Optional[str] = None
     date: date
     time: Optional[time] = None
-    status: str
+    completed: bool
 
     class Config:
         from_attributes = True
