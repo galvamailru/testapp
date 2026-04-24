@@ -1,27 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Task Calendar</title>
+    <title>Календарь задач</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="app">
-        <h1>Task Calendar</h1>
-        <div id="calendar"></div>
-        <div id="task-list">
-            <h2>Tasks for <span id="selected-date"></span></h2>
-            <ul id="tasks"></ul>
+        <h1>Календарь задач</h1>
+        <div id="calendar">
+            <div id="month-nav">
+                <button id="prev-month">&lt;</button>
+                <span id="month-year"></span>
+                <button id="next-month">&gt;</button>
+            </div>
+            <div id="days-grid"></div>
+        </div>
+        <div id="tasks-panel">
+            <h2>Задачи на <span id="selected-date"></span></h2>
+            <ul id="task-list"></ul>
+            <button id="add-task-btn">Добавить задачу</button>
+        </div>
+    </div>
+    <div id="task-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3 id="modal-title">Новая задача</h3>
             <form id="task-form">
-                <input type="text" id="title" placeholder="Task title" required>
-                <input type="date" id="date" required>
-                <input type="time" id="time">
-                <textarea id="description" placeholder="Description"></textarea>
-                <button type="submit">Add Task</button>
+                <input type="hidden" id="task-id">
+                <label>Название: <input type="text" id="task-title" required></label>
+                <label>Описание: <textarea id="task-description"></textarea></label>
+                <button type="submit">Сохранить</button>
             </form>
         </div>
     </div>
-    <script src="app.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
