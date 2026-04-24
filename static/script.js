@@ -1,65 +1,91 @@
-const API_URL = '/tasks';
+const API_BASE = '/tasks';
+let currentDate = new Date();
 
-async function loadTasks() {
-    const datePicker = document.getElementById('datePicker');
-    const date = datePicker.value;
-    if (!date) return;
-    document.getElementById('selectedDate').innerText = date;
-    const response = await fetch(`${API_URL}?date=${date}`);
+function renderCalendar() {
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    
+    const calendar = document.getElementById('calendar');
+    calendar.innerHTML = '';
+    
+    // Add empty cells for days before first day
+    for (let i = 0; i < firstDay; i++) {
+        const empty = document.createElement('div');
+        empty.className = 'day empty';
+        calendar.appendChild(empty);
+    }
+    
+    for (let day = 1; day <= daysInMonth; day++) {
+        const dayDiv = document.createElement('div');
+        dayDiv.className = 'day';
+        dayDiv.textContent = day;
+        dayDiv.dataset.date = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+        dayDiv.addEventListener('click', () => selectDate(dayDiv.dataset.date));
+        calendar.appendChild(dayDiv);
+    }
+}
+
+function selectDate(dateStr) {
+    document.getElementById('selected-date').textContent = dateStr;
+    fetchTasks(dateStr);
+}
+
+async function fetchTasks(date) {
+    const response = await fetch(`${API_BASE}/?date=${date}`);
     const tasks = await response.json();
-    const taskList = document.getElementById('taskList');
+    const taskList = document.getElementById('task-list');
     taskList.innerHTML = '';
     tasks.forEach(task => {
         const li = document.createElement('li');
-        li.className = task.completed ? 'completed' : '';
         li.innerHTML = `
-            <strong>${task.title}</strong>
-            ${task.description ? `- ${task.description}` : ''}
-            ${task.time ? `at ${task.time}` : ''}
-            <button onclick="toggleTask(${task.id})">Toggle</button>
+            <span class="${task.completed ? 'completed' : ''}">${task.title} ${task.time ? 'at ' + task.time : ''}</span>
             <button onclick="deleteTask(${task.id})">Delete</button>
+            <button onclick="toggleTask(${task.id}, ${!task.completed})">Toggle</button>
         `;
         taskList.appendChild(li);
     });
 }
 
-document.getElementById('taskForm').addEventListener('submit', async (e) => {
+document.getElementById('task-form').addEventListener('submit', async (e) => {
     e.preventDefault();
+    const date = document.getElementById('selected-date').textContent;
+    if (!date) return;
     const title = document.getElementById('title').value;
     const description = document.getElementById('description').value;
     const time = document.getElementById('time').value;
-    const date = document.getElementById('datePicker').value;
-    if (!title || !date) return;
-    const response = await fetch(API_URL, {
+    const response = await fetch(API_BASE + '/', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({title, description, date, time: time || null})
+        body: JSON.stringify({title, description, date, time: time || null, completed: false})
     });
     if (response.ok) {
-        loadTasks();
-        document.getElementById('taskForm').reset();
+        fetchTasks(date);
+        document.getElementById('title').value = '';
+        document.getElementById('description').value = '';
+        document.getElementById('time').value = '';
     }
 });
 
-async function toggleTask(id) {
-    const response = await fetch(`${API_URL}/${id}`);
-    const task = await response.json();
-    const updated = await fetch(`${API_URL}/${id}`, {
+async function deleteTask(id) {
+    const date = document.getElementById('selected-date').textContent;
+    await fetch(`${API_BASE}/${id}`, {method: 'DELETE'});
+    fetchTasks(date);
+}
+
+async function toggleTask(id, completed) {
+    const date = document.getElementById('selected-date').textContent;
+    const response = await fetch(`${API_BASE}/${id}`, {
         method: 'PUT',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({completed: !task.completed})
+        body: JSON.stringify({completed})
     });
-    if (updated.ok) loadTasks();
+    if (response.ok) fetchTasks(date);
 }
 
-async function deleteTask(id) {
-    const response = await fetch(`${API_URL}/${id}`, {method: 'DELETE'});
-    if (response.ok) loadTasks();
-}
-
-// Load today's tasks on page load
-window.onload = () => {
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('datePicker').value = today;
-    loadTasks();
-};
+renderCalendar();
+// Select today by default
+const today = new Date();
+const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+selectDate(todayStr);

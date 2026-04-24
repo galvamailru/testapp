@@ -1,24 +1,8 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-}
-#calendar {
-    margin-bottom: 20px;
-}
-#taskList {
-    list-style: none;
-    padding: 0;
-}
-#taskList li {
-    margin: 5px 0;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-.completed {
-    text-decoration: line-through;
-    color: gray;
-}
-button {
-    margin-left: 5px;
-}
+body { font-family: Arial, sans-serif; margin: 20px; }
+#calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
+.day { border: 1px solid #ccc; padding: 10px; cursor: pointer; }
+.day:hover { background-color: #f0f0f0; }
+#tasks { margin-top: 20px; }
+#task-list { list-style: none; padding: 0; }
+#task-list li { margin: 5px 0; padding: 5px; border: 1px solid #ddd; display: flex; justify-content: space-between; }
+.completed { text-decoration: line-through; color: gray; }

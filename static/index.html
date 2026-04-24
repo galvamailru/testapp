@@ -6,14 +6,11 @@
 </head>
 <body>
     <h1>Task Calendar</h1>
-    <div id="calendar">
-        <input type="date" id="datePicker">
-        <button onclick="loadTasks()">Load Tasks</button>
-    </div>
+    <div id="calendar"></div>
     <div id="tasks">
-        <h2>Tasks for <span id="selectedDate"></span></h2>
-        <ul id="taskList"></ul>
-        <form id="taskForm">
+        <h2>Tasks for <span id="selected-date"></span></h2>
+        <ul id="task-list"></ul>
+        <form id="task-form">
             <input type="text" id="title" placeholder="Task title" required>
             <input type="text" id="description" placeholder="Description">
             <input type="time" id="time">
