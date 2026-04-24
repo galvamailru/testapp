@@ -1,34 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from pydantic import BaseModel
 from datetime import date
-from typing import Optional, List
-from models import Task, get_db, init_db
+from typing import List
+from models import Task
+from database import get_db
+from schemas import TaskCreate, TaskUpdate, TaskResponse
 
 router = APIRouter()
-
-class TaskCreate(BaseModel):
-    title: str
-    description: Optional[str] = None
-    date: date
-
-class TaskUpdate(BaseModel):
-    title: Optional[str] = None
-    description: Optional[str] = None
-    date: Optional[date] = None
-
-class TaskResponse(BaseModel):
-    id: int
-    title: str
-    description: Optional[str]
-    date: date
-
-    class Config:
-        orm_mode = True
-
-@router.on_event("startup")
-def on_startup():
-    init_db()
 
 @router.get("/tasks", response_model=List[TaskResponse])
 def get_tasks(date: date, db: Session = Depends(get_db)):
@@ -37,7 +15,7 @@ def get_tasks(date: date, db: Session = Depends(get_db)):
 
 @router.post("/tasks", response_model=TaskResponse, status_code=201)
 def create_task(task: TaskCreate, db: Session = Depends(get_db)):
-    db_task = Task(title=task.title, description=task.description, date=task.date)
+    db_task = Task(**task.dict())
     db.add(db_task)
     db.commit()
     db.refresh(db_task)
@@ -48,12 +26,8 @@ def update_task(task_id: int, task: TaskUpdate, db: Session = Depends(get_db)):
     db_task = db.query(Task).filter(Task.id == task_id).first()
     if not db_task:
         raise HTTPException(status_code=404, detail="Task not found")
-    if task.title is not None:
-        db_task.title = task.title
-    if task.description is not None:
-        db_task.description = task.description
-    if task.date is not None:
-        db_task.date = task.date
+    for key, value in task.dict(exclude_unset=True).items():
+        setattr(db_task, key, value)
     db.commit()
     db.refresh(db_task)
     return db_task
