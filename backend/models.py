@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Date, Time, Text, Boolean
+from sqlalchemy import Column, Integer, String, Date, Time, Boolean, Text
 from database import Base
 
 class Task(Base):

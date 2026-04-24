@@ -17,33 +17,16 @@
             </div>
             <div id="calendar-grid"></div>
         </div>
-        <div id="task-list">
+        <div id="tasks">
             <h2>Задачи на <span id="selected-date"></span></h2>
-            <ul id="tasks"></ul>
-            <button id="add-task-btn">Добавить задачу</button>
-        </div>
-    </div>
-
-    <!-- Modal for add/edit task -->
-    <div id="task-modal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2 id="modal-title">Новая задача</h2>
+            <ul id="task-list"></ul>
             <form id="task-form">
-                <input type="hidden" id="task-id">
-                <label for="title">Название:</label>
-                <input type="text" id="title" required>
-                <label for="description">Описание:</label>
-                <textarea id="description"></textarea>
-                <label for="time">Время:</label>
-                <input type="time" id="time">
-                <label for="completed">Выполнено:</label>
-                <input type="checkbox" id="completed">
-                <button type="submit">Сохранить</button>
+                <input type="text" id="task-title" placeholder="Название задачи" required>
+                <input type="time" id="task-time">
+                <button type="submit">Добавить</button>
             </form>
         </div>
     </div>
-
     <script src="app.js"></script>
 </body>
 </html>
