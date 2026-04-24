@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Calendar</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h1>Task Calendar</h1>
+    <div id="calendar"></div>
+    <div id="task-list">
+        <h2>Tasks for <span id="selected-date"></span></h2>
+        <ul id="tasks"></ul>
+        <form id="task-form">
+            <input type="text" id="title" placeholder="Task title" required>
+            <input type="date" id="date" required>
+            <input type="time" id="time">
+            <textarea id="description" placeholder="Description"></textarea>
+            <button type="submit">Add Task</button>
+        </form>
+    </div>
+    <script src="/static/script.js"></script>
+</body>
+</html>

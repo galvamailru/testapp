@@ -1,22 +1,16 @@
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from database import engine, Base
+from fastapi.staticfiles import StaticFiles
 from routers import tasks
+from database import engine, Base
 
 app = FastAPI()
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
 Base.metadata.create_all(bind=engine)
 
-app.include_router(tasks.router, prefix="/api/tasks", tags=["tasks"])
+app.include_router(tasks.router)
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/")
-def root():
+async def root():
     return {"message": "Task Calendar API"}

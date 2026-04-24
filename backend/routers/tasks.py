@@ -6,7 +6,7 @@ from database import get_db
 from models import Task
 from schemas import TaskCreate, TaskUpdate, TaskResponse
 
-router = APIRouter()
+router = APIRouter(prefix="/tasks", tags=["tasks"])
 
 @router.get("/", response_model=List[TaskResponse])
 def get_tasks(date: date = None, db: Session = Depends(get_db)):

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Date, Time, Boolean, Text
+from sqlalchemy import Column, Integer, String, Date, Time, Text
 from database import Base
 
 class Task(Base):
@@ -9,4 +9,7 @@ class Task(Base):
     description = Column(Text, nullable=True)
     date = Column(Date, nullable=False)
     time = Column(Time, nullable=True)
-    completed = Column(Boolean, default=False)
+    status = Column(String(50), default="pending")
+
+    def __repr__(self):
+        return f"<Task(id={self.id}, title={self.title}, date={self.date})>"
