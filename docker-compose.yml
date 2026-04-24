@@ -32,7 +32,7 @@ services:
     volumes:
       - ./frontend:/usr/share/nginx/html
     ports:
-      - "8085:80"
+      - "8086:80"
     depends_on:
       - backend
 
