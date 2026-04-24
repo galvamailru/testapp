@@ -1,6 +1,41 @@
-body { font-family: Arial, sans-serif; margin: 20px; }
-#calendar { margin-bottom: 20px; }
-#task-list { list-style: none; padding: 0; }
-#task-list li { margin: 5px 0; padding: 10px; background: #f0f0f0; border-radius: 5px; }
-#task-form { margin-top: 20px; }
-#task-form input, #task-form textarea { display: block; margin: 5px 0; padding: 5px; width: 200px; }
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+h1 {
+    color: #333;
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+label {
+    margin-right: 10px;
+}
+
+input, button {
+    margin-right: 10px;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    margin-bottom: 10px;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
