@@ -1,46 +1,70 @@
-const API_URL = '/tasks';
+let currentDate = new Date();
+let selectedDate = new Date();
 
-let currentDate = new Date().toISOString().split('T')[0];
+function renderCalendar() {
+    const calendar = document.getElementById('calendar');
+    calendar.innerHTML = '';
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-document.addEventListener('DOMContentLoaded', function() {
-    loadTasks(currentDate);
-    document.getElementById('selected-date').textContent = currentDate;
-    document.getElementById('date').value = currentDate;
-    document.getElementById('task-form').addEventListener('submit', addTask);
-});
+    for (let i = 0; i < firstDay; i++) {
+        const empty = document.createElement('div');
+        empty.className = 'day empty';
+        calendar.appendChild(empty);
+    }
 
-async function loadTasks(date) {
-    const response = await fetch(`${API_URL}?date=${date}`);
-    const tasks = await response.json();
-    const taskList = document.getElementById('task-list');
-    taskList.innerHTML = '';
-    tasks.forEach(task => {
-        const li = document.createElement('li');
-        li.innerHTML = `<strong>${task.title}</strong> ${task.time || ''} - ${task.description || ''} <button onclick="deleteTask(${task.id})">Delete</button>`;
-        taskList.appendChild(li);
-    });
-}
-
-async function addTask(event) {
-    event.preventDefault();
-    const title = document.getElementById('title').value;
-    const date = document.getElementById('date').value;
-    const time = document.getElementById('time').value || null;
-    const description = document.getElementById('description').value;
-    const response = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, date, time, description })
-    });
-    if (response.ok) {
-        loadTasks(date);
-        document.getElementById('title').value = '';
-        document.getElementById('time').value = '';
-        document.getElementById('description').value = '';
+    for (let day = 1; day <= daysInMonth; day++) {
+        const dayDiv = document.createElement('div');
+        dayDiv.className = 'day';
+        dayDiv.textContent = day;
+        dayDiv.dataset.date = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+        dayDiv.addEventListener('click', () => selectDate(dayDiv.dataset.date));
+        calendar.appendChild(dayDiv);
     }
 }
 
-async function deleteTask(id) {
-    await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
-    loadTasks(currentDate);
+function selectDate(dateStr) {
+    selectedDate = new Date(dateStr);
+    document.getElementById('selected-date').textContent = dateStr;
+    loadTasks(dateStr);
 }
+
+async function loadTasks(dateStr) {
+    const response = await fetch(`/tasks/?date=${dateStr}`);
+    const tasks = await response.json();
+    const list = document.getElementById('task-list');
+    list.innerHTML = '';
+    tasks.forEach(task => {
+        const li = document.createElement('li');
+        li.innerHTML = `<strong>${task.title}</strong> - ${task.description || ''} <button onclick="deleteTask(${task.id})">Delete</button>`;
+        list.appendChild(li);
+    });
+}
+
+document.getElementById('task-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const title = document.getElementById('title').value;
+    const description = document.getElementById('description').value;
+    const dueDate = document.getElementById('due-date').value;
+    const response = await fetch('/tasks/', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({title, description, due_date: dueDate})
+    });
+    if (response.ok) {
+        loadTasks(selectedDate.toISOString().split('T')[0]);
+        document.getElementById('title').value = '';
+        document.getElementById('description').value = '';
+        document.getElementById('due-date').value = '';
+    }
+});
+
+async function deleteTask(id) {
+    await fetch(`/tasks/${id}`, {method: 'DELETE'});
+    loadTasks(selectedDate.toISOString().split('T')[0]);
+}
+
+renderCalendar();
+selectDate(new Date().toISOString().split('T')[0]);

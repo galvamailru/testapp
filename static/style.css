@@ -1,41 +1,8 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-}
-
-h1 {
-    color: #333;
-}
-
-form {
-    margin-bottom: 20px;
-}
-
-label {
-    margin-right: 10px;
-}
-
-input, button {
-    margin-right: 10px;
-}
-
-ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-li {
-    margin-bottom: 10px;
-}
-
-button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #0056b3;
-}
+body { font-family: Arial, sans-serif; margin: 20px; }
+#calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
+.day { border: 1px solid #ccc; padding: 10px; cursor: pointer; }
+.day:hover { background-color: #f0f0f0; }
+#tasks { margin-top: 20px; }
+#task-list { list-style: none; padding: 0; }
+#task-list li { border: 1px solid #ddd; padding: 10px; margin-bottom: 5px; }
+button { margin-left: 5px; }

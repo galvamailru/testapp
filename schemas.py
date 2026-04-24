@@ -1,28 +1,24 @@
 from pydantic import BaseModel
-from datetime import date, time
+from datetime import datetime
 from typing import Optional
 
-class TaskCreate(BaseModel):
+class TaskBase(BaseModel):
     title: str
     description: Optional[str] = None
-    date: date
-    time: Optional[time] = None
-    completed: bool = False
+    due_date: datetime
+
+class TaskCreate(TaskBase):
+    pass
 
 class TaskUpdate(BaseModel):
     title: Optional[str] = None
     description: Optional[str] = None
-    date: Optional[date] = None
-    time: Optional[time] = None
-    completed: Optional[bool] = None
+    due_date: Optional[datetime] = None
 
-class TaskResponse(BaseModel):
+class Task(TaskBase):
     id: int
-    title: str
-    description: Optional[str] = None
-    date: date
-    time: Optional[time] = None
-    completed: bool
+    created_at: datetime
+    updated_at: datetime
 
     class Config:
         orm_mode = True
