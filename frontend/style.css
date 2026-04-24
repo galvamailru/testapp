@@ -11,27 +11,27 @@ body {
     background: white;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 #calendar {
     margin-bottom: 20px;
 }
 
-#calendar-header {
+#month-nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
 }
 
-#calendar-grid {
+#days-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 5px;
 }
 
-.calendar-day {
+.day {
     padding: 10px;
     text-align: center;
     background: #e0e0e0;
@@ -39,33 +39,32 @@ body {
     border-radius: 4px;
 }
 
-.calendar-day:hover {
+.day:hover {
     background: #d0d0d0;
 }
 
-.calendar-day.selected {
+.day.selected {
     background: #4caf50;
     color: white;
 }
 
-#tasks {
+#task-list {
     margin-top: 20px;
 }
 
-#task-list {
+#tasks {
     list-style: none;
     padding: 0;
 }
 
-.task-item {
+#tasks li {
     display: flex;
     justify-content: space-between;
-    align-items: center;
     padding: 8px;
     border-bottom: 1px solid #ddd;
 }
 
-.task-item.completed {
+#tasks li.completed {
     text-decoration: line-through;
     color: #888;
 }
@@ -76,7 +75,7 @@ body {
     margin-top: 10px;
 }
 
-#task-form input[type="text"] {
+#task-form input {
     flex: 1;
     padding: 8px;
 }

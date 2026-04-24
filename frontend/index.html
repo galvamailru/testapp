@@ -10,16 +10,16 @@
     <div id="app">
         <h1>Календарь задач</h1>
         <div id="calendar">
-            <div id="calendar-header">
+            <div id="month-nav">
                 <button id="prev-month">&lt;</button>
-                <span id="current-month"></span>
+                <span id="month-year"></span>
                 <button id="next-month">&gt;</button>
             </div>
-            <div id="calendar-grid"></div>
+            <div id="days-grid"></div>
         </div>
-        <div id="tasks">
+        <div id="task-list">
             <h2>Задачи на <span id="selected-date"></span></h2>
-            <ul id="task-list"></ul>
+            <ul id="tasks"></ul>
             <form id="task-form">
                 <input type="text" id="task-title" placeholder="Название задачи" required>
                 <input type="time" id="task-time">
