@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Календарь задач</title>
+    <title>Task Calendar</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="app">
-        <h1>Календарь задач</h1>
+        <h1>Task Calendar</h1>
         <div id="calendar">
             <div id="month-nav">
                 <button id="prev-month">&lt;</button>
@@ -18,12 +18,13 @@
             <div id="days-grid"></div>
         </div>
         <div id="task-list">
-            <h2>Задачи на <span id="selected-date"></span></h2>
+            <h2>Tasks for <span id="selected-date"></span></h2>
             <ul id="tasks"></ul>
             <form id="task-form">
-                <input type="text" id="task-title" placeholder="Название задачи" required>
+                <input type="text" id="task-title" placeholder="Task title" required>
+                <input type="text" id="task-desc" placeholder="Description">
                 <input type="time" id="task-time">
-                <button type="submit">Добавить</button>
+                <button type="submit">Add Task</button>
             </form>
         </div>
     </div>

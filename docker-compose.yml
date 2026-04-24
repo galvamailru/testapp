@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   db:
-    image: postgres:13
+    image: postgres:15
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
@@ -12,8 +12,8 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-  web:
-    build: .
+  backend:
+    build: ./backend
     ports:
       - "8000:8000"
     depends_on:
