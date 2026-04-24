@@ -1,4 +1,4 @@
-const API_BASE = 'http://localhost:8085';
+const API_BASE = ''; // Пустой, так как фронтенд и бэкенд на одном домене через nginx
 
 let currentDate = new Date();
 let selectedDate = new Date();
