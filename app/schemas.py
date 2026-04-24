@@ -1,6 +1,6 @@
 from pydantic import BaseModel
-from typing import Optional
 from datetime import date, time
+from typing import Optional
 
 class TaskCreate(BaseModel):
     title: str
