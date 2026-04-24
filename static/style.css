@@ -2,44 +2,23 @@ body {
     font-family: Arial, sans-serif;
     margin: 20px;
 }
-
-h1 {
-    color: #333;
-}
-
-form {
+#calendar {
     margin-bottom: 20px;
 }
-
-label {
-    margin-right: 10px;
-}
-
-input {
-    margin-right: 10px;
-}
-
-button {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #45a049;
-}
-
-ul {
-    list-style-type: none;
+#taskList {
+    list-style: none;
     padding: 0;
 }
-
-li {
-    margin-bottom: 10px;
+#taskList li {
+    margin: 5px 0;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
-
-li form {
-    display: inline;
+.completed {
+    text-decoration: line-through;
+    color: gray;
+}
+button {
+    margin-left: 5px;
 }
