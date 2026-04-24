@@ -1,7 +1,10 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from routes import router
-from models import engine, Base
+from pydantic import BaseModel
+from datetime import date
+from typing import Optional
+import asyncpg
+import os
 
 app = FastAPI()
 
@@ -13,6 +16,79 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-Base.metadata.create_all(bind=engine)
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://user:password@db:5432/taskdb")
 
-app.include_router(router)
+class Task(BaseModel):
+    id: Optional[int] = None
+    title: str
+    description: Optional[str] = ""
+    due_date: date
+
+async def get_db():
+    conn = await asyncpg.connect(DATABASE_URL)
+    try:
+        yield conn
+    finally:
+        await conn.close()
+
+@app.on_event("startup")
+async def startup():
+    conn = await asyncpg.connect(DATABASE_URL)
+    await conn.execute('''
+        CREATE TABLE IF NOT EXISTS tasks (
+            id SERIAL PRIMARY KEY,
+            title VARCHAR(255) NOT NULL,
+            description TEXT,
+            due_date DATE NOT NULL
+        )
+    ''')
+    await conn.close()
+
+@app.get("/tasks")
+async def get_tasks(date_from: date, date_to: date):
+    conn = await asyncpg.connect(DATABASE_URL)
+    try:
+        rows = await conn.fetch(
+            "SELECT id, title, description, due_date FROM tasks WHERE due_date >= $1 AND due_date <= $2 ORDER BY due_date",
+            date_from, date_to
+        )
+        return [dict(row) for row in rows]
+    finally:
+        await conn.close()
+
+@app.post("/tasks")
+async def create_task(task: Task):
+    conn = await asyncpg.connect(DATABASE_URL)
+    try:
+        row = await conn.fetchrow(
+            "INSERT INTO tasks (title, description, due_date) VALUES ($1, $2, $3) RETURNING id, title, description, due_date",
+            task.title, task.description, task.due_date
+        )
+        return dict(row)
+    finally:
+        await conn.close()
+
+@app.put("/tasks/{task_id}")
+async def update_task(task_id: int, task: Task):
+    conn = await asyncpg.connect(DATABASE_URL)
+    try:
+        row = await conn.fetchrow(
+            "UPDATE tasks SET title=$1, description=$2, due_date=$3 WHERE id=$4 RETURNING id, title, description, due_date",
+            task.title, task.description, task.due_date, task_id
+        )
+        if row is None:
+            raise HTTPException(status_code=404, detail="Task not found")
+        return dict(row)
+    finally:
+        await conn.close()
+
+@app.delete("/tasks/{task_id}")
+async def delete_task(task_id: int):
+    conn = await asyncpg.connect(DATABASE_URL)
+    try:
+        result = await conn.execute("DELETE FROM tasks WHERE id=$1", task_id)
+        if result == "DELETE 0":
+            raise HTTPException(status_code=404, detail="Task not found")
+        return {"message": "Task deleted"}
+    finally:
+        await conn.close()

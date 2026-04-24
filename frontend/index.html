@@ -9,29 +9,19 @@
 <body>
     <div id="app">
         <h1>Календарь задач</h1>
-        <div id="calendar">
-            <div id="month-nav">
-                <button id="prev-month">&lt;</button>
-                <span id="month-year"></span>
-                <button id="next-month">&gt;</button>
-            </div>
-            <div id="days-grid"></div>
+        <div id="calendar-header">
+            <button id="prev-month">&lt;</button>
+            <span id="month-year"></span>
+            <button id="next-month">&gt;</button>
         </div>
-        <div id="tasks-panel">
+        <div id="calendar-grid"></div>
+        <div id="task-panel">
             <h2>Задачи на <span id="selected-date"></span></h2>
             <ul id="task-list"></ul>
-            <button id="add-task-btn">Добавить задачу</button>
-        </div>
-    </div>
-    <div id="task-modal" class="modal hidden">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h3 id="modal-title">Новая задача</h3>
             <form id="task-form">
-                <input type="hidden" id="task-id">
-                <label>Название: <input type="text" id="task-title" required></label>
-                <label>Описание: <textarea id="task-description"></textarea></label>
-                <button type="submit">Сохранить</button>
+                <input type="text" id="task-title" placeholder="Название задачи" required>
+                <textarea id="task-desc" placeholder="Описание"></textarea>
+                <button type="submit">Добавить задачу</button>
             </form>
         </div>
     </div>
