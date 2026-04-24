@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import tasks
+from routes import router as tasks_router
 from database import engine, Base
 import uvicorn
 
@@ -16,7 +16,7 @@ app.add_middleware(
 
 Base.metadata.create_all(bind=engine)
 
-app.include_router(tasks.router)
+app.include_router(tasks_router)
 
 @app.get("/")
 async def root():
