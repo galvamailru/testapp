@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Task Calendar</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h1>Task Calendar</h1>
+    <form action="/add" method="post">
+        <label for="date">Date:</label>
+        <input type="date" id="date" name="date" required>
+        <label for="title">Task:</label>
+        <input type="text" id="title" name="title" required>
+        <button type="submit">Add Task</button>
+    </form>
+    <h2>Tasks</h2>
+    <ul>
+        {% for task in tasks %}
+        <li>
+            {{ task.date }} - {{ task.title }}
+            <form action="/delete/{{ task.id }}" method="post" style="display:inline;">
+                <button type="submit">Delete</button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
