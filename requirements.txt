@@ -4,4 +4,6 @@ sqlalchemy
 psycopg2-binary
 pydantic
 alembic
-python-dateutil
+python-multipart
+jinja2
+aiofiles
