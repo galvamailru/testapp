@@ -1,11 +1,7 @@
 const API_BASE = 'http://localhost:8000';
 
 let currentDate = new Date();
-let selectedDate = new Date();
-
-function formatDate(date) {
-    return date.toISOString().split('T')[0];
-}
+let selectedDate = null;
 
 function renderCalendar() {
     const year = currentDate.getFullYear();
@@ -28,58 +24,33 @@ function renderCalendar() {
         const dayDiv = document.createElement('div');
         dayDiv.className = 'day';
         dayDiv.textContent = day;
-        const dateObj = new Date(year, month, day);
-        if (formatDate(dateObj) === formatDate(selectedDate)) {
+        dayDiv.dataset.date = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+        dayDiv.addEventListener('click', () => selectDate(dayDiv.dataset.date));
+        if (selectedDate === dayDiv.dataset.date) {
             dayDiv.classList.add('selected');
         }
-        dayDiv.addEventListener('click', () => {
-            selectedDate = dateObj;
-            renderCalendar();
-            loadTasks();
-        });
         grid.appendChild(dayDiv);
     }
 }
 
-async function loadTasks() {
-    const dateStr = formatDate(selectedDate);
+function selectDate(dateStr) {
+    selectedDate = dateStr;
     document.getElementById('selected-date').textContent = dateStr;
+    loadTasks(dateStr);
+    renderCalendar();
+}
+
+async function loadTasks(dateStr) {
     const response = await fetch(`${API_BASE}/tasks/?date=${dateStr}`);
     const tasks = await response.json();
-    const list = document.getElementById('tasks');
+    const list = document.getElementById('task-list');
     list.innerHTML = '';
     tasks.forEach(task => {
         const li = document.createElement('li');
-        li.textContent = `${task.title} - ${task.time || ''} ${task.description || ''}`;
-        if (task.completed) li.classList.add('completed');
-        const deleteBtn = document.createElement('button');
-        deleteBtn.textContent = 'Delete';
-        deleteBtn.addEventListener('click', () => deleteTask(task.id));
-        li.appendChild(deleteBtn);
+        li.innerHTML = `<span>${task.title} ${task.time ? 'at ' + task.time : ''}</span>
+                        <button onclick="deleteTask(${task.id})">Delete</button>`;
         list.appendChild(li);
     });
-}
-
-async function addTask(event) {
-    event.preventDefault();
-    const title = document.getElementById('task-title').value;
-    const description = document.getElementById('task-desc').value;
-    const time = document.getElementById('task-time').value;
-    const date = formatDate(selectedDate);
-    const response = await fetch(`${API_BASE}/tasks/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, description, date, time: time || null })
-    });
-    if (response.ok) {
-        document.getElementById('task-form').reset();
-        loadTasks();
-    }
-}
-
-async function deleteTask(id) {
-    await fetch(`${API_BASE}/tasks/${id}`, { method: 'DELETE' });
-    loadTasks();
 }
 
 document.getElementById('prev-month').addEventListener('click', () => {
@@ -92,7 +63,32 @@ document.getElementById('next-month').addEventListener('click', () => {
     renderCalendar();
 });
 
-document.getElementById('task-form').addEventListener('submit', addTask);
+document.getElementById('task-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const title = document.getElementById('task-title').value;
+    const description = document.getElementById('task-desc').value;
+    const time = document.getElementById('task-time').value;
+    const task = {
+        title,
+        description: description || null,
+        date: selectedDate,
+        time: time || null,
+        completed: false
+    };
+    await fetch(`${API_BASE}/tasks/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(task)
+    });
+    loadTasks(selectedDate);
+    document.getElementById('task-form').reset();
+});
 
+async function deleteTask(id) {
+    await fetch(`${API_BASE}/tasks/${id}`, { method: 'DELETE' });
+    loadTasks(selectedDate);
+}
+
+// Initialize
 renderCalendar();
-loadTasks();
+selectDate(new Date().toISOString().split('T')[0]);

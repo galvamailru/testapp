@@ -1,20 +1,10 @@
 body {
     font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 20px;
-    background-color: #f4f4f4;
-}
-
-#app {
-    max-width: 800px;
-    margin: auto;
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    margin: 20px;
 }
 
 #calendar {
+    max-width: 400px;
     margin-bottom: 20px;
 }
 
@@ -33,64 +23,40 @@ body {
 
 .day {
     padding: 10px;
-    background: #e0e0e0;
+    background: #f0f0f0;
     text-align: center;
     cursor: pointer;
-    border-radius: 4px;
 }
 
 .day:hover {
-    background: #ccc;
+    background: #ddd;
 }
 
 .day.selected {
-    background: #4caf50;
+    background: #4CAF50;
     color: white;
 }
 
-#task-list {
-    margin-top: 20px;
+#tasks {
+    max-width: 400px;
 }
 
-#tasks {
+#task-list {
     list-style: none;
     padding: 0;
 }
 
-#tasks li {
-    padding: 8px;
-    background: #f9f9f9;
-    margin-bottom: 5px;
-    border-radius: 4px;
+#task-list li {
     display: flex;
     justify-content: space-between;
-}
-
-#tasks li.completed {
-    text-decoration: line-through;
-    opacity: 0.6;
+    padding: 5px;
+    border-bottom: 1px solid #ccc;
 }
 
 #task-form {
-    display: flex;
-    gap: 10px;
     margin-top: 10px;
 }
 
 #task-form input {
-    flex: 1;
-    padding: 8px;
-}
-
-#task-form button {
-    padding: 8px 16px;
-    background: #4caf50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-#task-form button:hover {
-    background: #45a049;
+    margin-right: 5px;
 }
