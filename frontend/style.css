@@ -4,59 +4,59 @@ body {
 }
 
 #calendar {
-    max-width: 400px;
-    margin-bottom: 20px;
-}
-
-#month-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-#days-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 5px;
+    margin-bottom: 20px;
 }
 
-.day {
+.calendar-day {
+    border: 1px solid #ccc;
     padding: 10px;
-    background: #f0f0f0;
     text-align: center;
     cursor: pointer;
 }
 
-.day:hover {
-    background: #ddd;
-}
-
-.day.selected {
-    background: #4CAF50;
-    color: white;
-}
-
-#tasks {
-    max-width: 400px;
+.calendar-day:hover {
+    background-color: #f0f0f0;
 }
 
 #task-list {
+    margin-top: 20px;
+}
+
+#tasks {
     list-style: none;
     padding: 0;
 }
 
-#task-list li {
+#tasks li {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 5px;
     display: flex;
     justify-content: space-between;
-    padding: 5px;
-    border-bottom: 1px solid #ccc;
 }
 
 #task-form {
-    margin-top: 10px;
+    margin-top: 20px;
 }
 
-#task-form input {
-    margin-right: 5px;
+#task-form input, #task-form textarea {
+    display: block;
+    margin-bottom: 10px;
+    width: 100%;
+    padding: 8px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
 }

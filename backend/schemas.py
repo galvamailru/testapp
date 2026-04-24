@@ -1,6 +1,6 @@
 from pydantic import BaseModel
-from datetime import date, time
 from typing import Optional
+from datetime import date, time
 
 class TaskCreate(BaseModel):
     title: str
@@ -9,8 +9,20 @@ class TaskCreate(BaseModel):
     time: Optional[time] = None
     completed: bool = False
 
-class TaskResponse(TaskCreate):
+class TaskUpdate(BaseModel):
+    title: Optional[str] = None
+    description: Optional[str] = None
+    date: Optional[date] = None
+    time: Optional[time] = None
+    completed: Optional[bool] = None
+
+class TaskResponse(BaseModel):
     id: int
+    title: str
+    description: Optional[str] = None
+    date: date
+    time: Optional[time] = None
+    completed: bool
 
     class Config:
-        orm_mode = True
+        from_attributes = True
