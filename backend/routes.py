@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 from datetime import date
-from typing import List, Optional
-from models import Task, get_db
+from typing import Optional, List
+from models import Task, get_db, init_db
 
 router = APIRouter()
 
@@ -20,11 +20,15 @@ class TaskUpdate(BaseModel):
 class TaskResponse(BaseModel):
     id: int
     title: str
-    description: Optional[str] = None
+    description: Optional[str]
     date: date
 
     class Config:
         orm_mode = True
+
+@router.on_event("startup")
+def on_startup():
+    init_db()
 
 @router.get("/tasks", response_model=List[TaskResponse])
 def get_tasks(date: date, db: Session = Depends(get_db)):
@@ -61,4 +65,4 @@ def delete_task(task_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Task not found")
     db.delete(db_task)
     db.commit()
-    return
+    return None

@@ -3,13 +3,13 @@ const API_BASE = 'http://localhost:8085';
 let currentDate = new Date();
 let selectedDate = new Date();
 
-const monthYearSpan = document.getElementById('month-year');
+const monthYearElem = document.getElementById('month-year');
 const calendarGrid = document.getElementById('calendar-grid');
-const selectedDateSpan = document.getElementById('selected-date');
+const selectedDateElem = document.getElementById('selected-date');
 const taskList = document.getElementById('task-list');
 const taskForm = document.getElementById('task-form');
-const taskTitleInput = document.getElementById('task-title');
-const taskDescriptionInput = document.getElementById('task-description');
+const taskTitle = document.getElementById('task-title');
+const taskDescription = document.getElementById('task-description');
 
 document.getElementById('prev-month').addEventListener('click', () => {
     currentDate.setMonth(currentDate.getMonth() - 1);
@@ -23,24 +23,24 @@ document.getElementById('next-month').addEventListener('click', () => {
 
 taskForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const title = taskTitleInput.value.trim();
+    const title = taskTitle.value.trim();
     if (!title) return;
-    const description = taskDescriptionInput.value.trim();
-    const dateStr = formatDate(selectedDate);
+    const description = taskDescription.value.trim();
+    const date = selectedDate.toISOString().split('T')[0];
     await fetch(`${API_BASE}/tasks`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, description, date: dateStr })
+        body: JSON.stringify({ title, description, date })
     });
-    taskTitleInput.value = '';
-    taskDescriptionInput.value = '';
+    taskTitle.value = '';
+    taskDescription.value = '';
     loadTasks();
 });
 
 function renderCalendar() {
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
-    monthYearSpan.textContent = `${currentDate.toLocaleString('ru', { month: 'long' })} ${year}`;
+    monthYearElem.textContent = `${currentDate.toLocaleString('ru', { month: 'long' })} ${year}`;
     
     const firstDay = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -49,33 +49,30 @@ function renderCalendar() {
     
     // Empty cells for days before first day
     for (let i = 0; i < (firstDay === 0 ? 6 : firstDay - 1); i++) {
-        const emptyDiv = document.createElement('div');
-        emptyDiv.className = 'calendar-day empty';
-        calendarGrid.appendChild(emptyDiv);
+        const empty = document.createElement('div');
+        calendarGrid.appendChild(empty);
     }
     
     for (let day = 1; day <= daysInMonth; day++) {
-        const dayDiv = document.createElement('div');
-        dayDiv.className = 'calendar-day';
-        dayDiv.textContent = day;
+        const dayElem = document.createElement('div');
+        dayElem.className = 'calendar-day';
+        dayElem.textContent = day;
         const dateObj = new Date(year, month, day);
         if (dateObj.toDateString() === selectedDate.toDateString()) {
-            dayDiv.classList.add('selected');
+            dayElem.classList.add('selected');
         }
-        dayDiv.addEventListener('click', () => {
+        dayElem.addEventListener('click', () => {
             selectedDate = dateObj;
             renderCalendar();
             loadTasks();
         });
-        calendarGrid.appendChild(dayDiv);
+        calendarGrid.appendChild(dayElem);
     }
-    
-    selectedDateSpan.textContent = formatDate(selectedDate);
-    loadTasks();
 }
 
 async function loadTasks() {
-    const dateStr = formatDate(selectedDate);
+    const dateStr = selectedDate.toISOString().split('T')[0];
+    selectedDateElem.textContent = dateStr;
     const response = await fetch(`${API_BASE}/tasks?date=${dateStr}`);
     const tasks = await response.json();
     taskList.innerHTML = '';
@@ -100,24 +97,15 @@ async function deleteTask(id) {
 
 async function editTask(id) {
     const newTitle = prompt('Новое название:');
-    if (newTitle === null) return;
+    if (!newTitle) return;
     const newDescription = prompt('Новое описание:');
-    const body = {};
-    if (newTitle.trim()) body.title = newTitle.trim();
-    if (newDescription.trim()) body.description = newDescription.trim();
     await fetch(`${API_BASE}/tasks/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
+        body: JSON.stringify({ title: newTitle, description: newDescription })
     });
     loadTasks();
 }
 
-function formatDate(date) {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-}
-
 renderCalendar();
+loadTasks();
