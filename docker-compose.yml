@@ -1,4 +1,5 @@
 version: '3.8'
+
 services:
   db:
     image: postgres:15
@@ -7,9 +8,10 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: tasks
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+
   backend:
     build: ./backend
     ports:
@@ -18,6 +20,7 @@ services:
       DATABASE_URL: postgresql://user:password@db:5432/tasks
     depends_on:
       - db
+
   frontend:
     image: nginx:alpine
     volumes:
@@ -26,5 +29,6 @@ services:
       - "8080:80"
     depends_on:
       - backend
+
 volumes:
-  pgdata:
+  postgres_data:
