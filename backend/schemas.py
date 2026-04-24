@@ -2,12 +2,15 @@ from pydantic import BaseModel
 from datetime import date, time
 from typing import Optional
 
-class TaskCreate(BaseModel):
+class TaskBase(BaseModel):
     title: str
     description: Optional[str] = None
     date: date
     time: Optional[time] = None
     completed: bool = False
+
+class TaskCreate(TaskBase):
+    pass
 
 class TaskUpdate(BaseModel):
     title: Optional[str] = None
@@ -16,13 +19,8 @@ class TaskUpdate(BaseModel):
     time: Optional[time] = None
     completed: Optional[bool] = None
 
-class TaskResponse(BaseModel):
+class Task(TaskBase):
     id: int
-    title: str
-    description: Optional[str] = None
-    date: date
-    time: Optional[time] = None
-    completed: bool
 
     class Config:
         from_attributes = True

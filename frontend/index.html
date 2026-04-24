@@ -1,32 +1,23 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Календарь задач</title>
+    <title>Task Calendar</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="app">
-        <h1>Календарь задач</h1>
-        <div id="calendar">
-            <div id="month-nav">
-                <button id="prev-month">&lt;</button>
-                <span id="month-year"></span>
-                <button id="next-month">&gt;</button>
-            </div>
-            <div id="days-grid"></div>
-        </div>
-        <div id="tasks">
-            <h2>Задачи на <span id="selected-date"></span></h2>
-            <ul id="task-list"></ul>
-            <form id="task-form">
-                <input type="text" id="task-title" placeholder="Название задачи" required>
-                <input type="time" id="task-time">
-                <textarea id="task-description" placeholder="Описание"></textarea>
-                <button type="submit">Добавить</button>
-            </form>
-        </div>
+    <h1>Task Calendar</h1>
+    <div id="calendar"></div>
+    <div id="tasks">
+        <h2>Tasks for <span id="selected-date"></span></h2>
+        <ul id="task-list"></ul>
+        <form id="task-form">
+            <input type="text" id="task-title" placeholder="Task title" required>
+            <input type="text" id="task-description" placeholder="Description">
+            <input type="time" id="task-time">
+            <button type="submit">Add Task</button>
+        </form>
     </div>
     <script src="app.js"></script>
 </body>

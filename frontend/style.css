@@ -1,51 +1,24 @@
 body {
     font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 20px;
-    background-color: #f5f5f5;
-}
-
-#app {
-    max-width: 800px;
-    margin: 0 auto;
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    margin: 20px;
 }
 
 #calendar {
-    margin-bottom: 20px;
-}
-
-#month-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-#days-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 5px;
+    margin-bottom: 20px;
 }
 
-.day {
+.calendar-day {
+    border: 1px solid #ccc;
     padding: 10px;
-    background: #e0e0e0;
-    text-align: center;
     cursor: pointer;
-    border-radius: 4px;
+    text-align: center;
 }
 
-.day:hover {
-    background: #d0d0d0;
-}
-
-.day.selected {
-    background: #4caf50;
-    color: white;
+.calendar-day:hover {
+    background-color: #f0f0f0;
 }
 
 #tasks {
@@ -57,41 +30,15 @@ body {
     padding: 0;
 }
 
-.task-item {
+#task-list li {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 5px;
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
 }
 
-.task-item.completed {
+.completed {
     text-decoration: line-through;
-    color: #888;
-}
-
-#task-form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-#task-form input, #task-form textarea {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-#task-form button {
-    padding: 10px;
-    background: #4caf50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-#task-form button:hover {
-    background: #45a049;
+    color: gray;
 }
