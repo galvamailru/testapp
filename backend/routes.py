@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from models import Task, SessionLocal, init_db
 from pydantic import BaseModel
 from datetime import date
-from typing import List, Optional
-from models import Task, get_db
+from typing import Optional
 
 router = APIRouter()
 
@@ -17,21 +17,23 @@ class TaskUpdate(BaseModel):
     description: Optional[str] = None
     date: Optional[date] = None
 
-class TaskResponse(BaseModel):
-    id: int
-    title: str
-    description: Optional[str] = None
-    date: date
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
-    class Config:
-        from_attributes = True
+@router.on_event("startup")
+def on_startup():
+    init_db()
 
-@router.get("/tasks", response_model=List[TaskResponse])
+@router.get("/tasks")
 def get_tasks(date: date, db: Session = Depends(get_db)):
     tasks = db.query(Task).filter(Task.date == date).all()
     return tasks
 
-@router.post("/tasks", response_model=TaskResponse, status_code=201)
+@router.post("/tasks")
 def create_task(task: TaskCreate, db: Session = Depends(get_db)):
     db_task = Task(title=task.title, description=task.description, date=task.date)
     db.add(db_task)
@@ -39,7 +41,7 @@ def create_task(task: TaskCreate, db: Session = Depends(get_db)):
     db.refresh(db_task)
     return db_task
 
-@router.put("/tasks/{task_id}", response_model=TaskResponse)
+@router.put("/tasks/{task_id}")
 def update_task(task_id: int, task: TaskUpdate, db: Session = Depends(get_db)):
     db_task = db.query(Task).filter(Task.id == task_id).first()
     if not db_task:
@@ -54,11 +56,11 @@ def update_task(task_id: int, task: TaskUpdate, db: Session = Depends(get_db)):
     db.refresh(db_task)
     return db_task
 
-@router.delete("/tasks/{task_id}", status_code=204)
+@router.delete("/tasks/{task_id}")
 def delete_task(task_id: int, db: Session = Depends(get_db)):
     db_task = db.query(Task).filter(Task.id == task_id).first()
     if not db_task:
         raise HTTPException(status_code=404, detail="Task not found")
     db.delete(db_task)
     db.commit()
-    return None
+    return {"message": "Task deleted"}
