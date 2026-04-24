@@ -6,27 +6,33 @@ services:
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: tasks
+      POSTGRES_DB: taskcalendar
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d taskcalendar"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   backend:
     build: ./backend
     ports:
-      - "8085:8085"
+      - "8085:8000"
     environment:
-      DATABASE_URL: postgresql://user:password@db:5432/tasks
+      DATABASE_URL: postgresql://user:password@db:5432/taskcalendar
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   frontend:
     image: nginx:alpine
-    volumes:
-      - ./frontend:/usr/share/nginx/html
     ports:
       - "8080:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html
     depends_on:
       - backend
 

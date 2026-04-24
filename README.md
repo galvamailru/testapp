@@ -1,27 +1,29 @@
-# Task Calendar Application
+# Календарь задач
 
-A simple task calendar application with FastAPI backend, vanilla HTML/JS frontend, and PostgreSQL 15 database.
+Приложение для ведения календаря задач с сохранением данных в PostgreSQL 15.
 
-## Requirements
-- Docker and Docker Compose installed
+## Запуск
 
-## How to Run
-1. Clone the repository.
-2. Run `docker-compose up --build`.
-3. Access the frontend at `http://localhost:8080`.
-4. The backend API is available at `http://localhost:8085`.
+1. Установите Docker и Docker Compose.
+2. Склонируйте репозиторий.
+3. Запустите `docker-compose up --build`.
+4. Откройте `http://localhost:8085`.
 
-## Features
-- View tasks for a selected day.
-- Add, edit, and delete tasks.
-- Navigate between months.
-- Data persists in PostgreSQL.
+## API
 
-## Project Structure
+- `GET /tasks?date=YYYY-MM-DD` - получить задачи на дату
+- `POST /tasks` - создать задачу
+- `PUT /tasks/{id}` - обновить задачу
+- `DELETE /tasks/{id}` - удалить задачу
+
+## Структура проекта
+
 ```
 project/
 ├── backend/
 │   ├── app.py
+│   ├── models.py
+│   ├── routes.py
 │   ├── requirements.txt
 │   └── Dockerfile
 ├── frontend/
